@@ -13,23 +13,23 @@ import org.openqa.selenium.chrome.ChromeDriver;
 
 public class RefreshRunner implements Callable {
 
+  private final RefreshConfiguration config;
   private final WebDriver driver;
-  private final String pageUrl;
 
-  public RefreshRunner(String pageUrl) throws Exception {
+  public RefreshRunner(RefreshConfiguration config) throws Exception {
     String baseName = "chromedriver";
     String extension = ".exe";
 
     File extractedDriver = File.createTempFile(baseName, extension);
     extractedDriver.deleteOnExit();
-
+    
     Files.copy(this.getClass().getResourceAsStream(baseName + extension), extractedDriver.toPath(), StandardCopyOption.REPLACE_EXISTING);
     System.setProperty("webdriver.chrome.driver", extractedDriver.getAbsolutePath());
 
     playSound(false);
 
     this.driver = new ChromeDriver();
-    this.pageUrl = pageUrl;
+    this.config = config;
   }
 
   public final void playSound(boolean inLoop) throws Exception {
@@ -44,9 +44,9 @@ public class RefreshRunner implements Callable {
 
   @Override
   public Object call() throws Exception {
-    driver.get(pageUrl);
+    driver.get(config.getPageUrl());
 
-    String uninterestingText = "You just missed it.";
+    String uninterestingText = config.getUninterestingText();
     boolean hasStarted = false;
 
     while (!hasStarted) {
@@ -54,7 +54,7 @@ public class RefreshRunner implements Callable {
 
       if (body.getText().contains(uninterestingText)) {
         driver.navigate().refresh();
-        Thread.sleep(1024);
+        Thread.sleep(config.getWaitInMillis());
       } else {
         hasStarted = true;
         playSound(true);
