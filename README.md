@@ -15,3 +15,16 @@ Page Refresher can be packed as an executable JAR file using `mvn package`. The 
 ## Compatibility
 
 Page Refresher has been successfully tested on Windows 10 with Java 1.8 using Chrome v56 (64-bit), ChromeDriver v2.27 and Selenium 3.0.1.
+
+## Scenario
+
+You want to get alarmed when it's friday, so you configure Page Refresher to lookup [http://isitfridayyet.net/](http://isitfridayyet.net/):
+
+1. Start **Page Refresher**
+2. Set URL to "http://isitfridayyet.net/"
+3. Set text to refresh to "You just missed it."
+4. Set update interval to "1000" (ms)
+5. Page Refresher will now play a test sound (so you know how it will sound like when there is an alarm)
+6. Afterwards, Page Refresher will visit "http://isitfridayyet.net/" in a separate Google Chrome instance
+7. As long as the text "You just missed it." is shown, Page Refresher will refresh the website once per second
+8. As soon as Page Refresher cannot find the text "You just missed it." anymore, it will stop refreshing the browser window and play an alarm sound. The alarm will stop shortly after.
